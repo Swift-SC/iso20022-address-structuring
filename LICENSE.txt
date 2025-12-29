@@ -1,0 +1,149 @@
+SOFTWARE LICENSE  
+
+for the main codebase of the Swift Hybrid Postal Address Structuring Solution 
+
+01 December 2025 
+
+Copyright © S.W.I.F.T SC ("Swift"), Avenue Adele 1, B-1310 La Hulpe, Belgium
+or its licensors, 2025. All rights reserved.
+
+The above copyright notice and this License shall be included in all copies or
+substantial portions of the Software.
+
+    1. General
+
+“Software” means the main codebase of the Swift Hybrid Postal Address
+Structuring Solution.
+
+You should carefully read these license conditions prior to downloading the
+Software. You are permitted to install and use the Software and its
+accompanying documentation only upon acceptance of the terms of this License.
+By downloading and using the Software, you acknowledge and agree to be bound
+by these terms. If you do not accept the License terms and conditions, you
+must not install nor use the Software.
+
+Note that this Software may also include third-party open-source components.
+Those license terms and conditions will be displayed in the installation
+notice at first installation/use (as the case may be). You should carefully
+read those license terms and conditions. By downloading and using Software,
+you will be considered to have accepted and agreed to those third-party
+license terms and conditions.
+
+User support and maintenance services for the Software will not be provided.
+
+    2. Grant of License
+
+Subject to compliance with the terms of this License, Swift grants You (the
+“Licensee”) a worldwide, non-exclusive license to use the Software. License is
+hereby granted, free of charge, to any person obtaining a copy of this
+Software and associated documentation files (the “Software”), to deal in the
+Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the conditions of this License.
+
+    3. Disclaimer
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+    4. Indemnity
+
+By using the Software, you agree to indemnify, defend and hold harmless Swift,
+including its affiliates, officers, directors, suppliers, licensors,
+contributors and employees from and against any claims, liabilities, damages,
+losses, or expenses (including reasonable legal fees and costs) arising out of
+your use or distribution of the Software or your breach of this License.
+
+    5. Your Warranties
+
+By using the Software, you represent and warrant (i) you have the full power
+and authority to bind for yourself and the entity receiving the benefits of
+the Software, and any associated documentation, to the terms of this License,
+(ii) You will use the Software in accordance to this License and (iii) you are
+not subject to any export ban or sanctions programs and that you will comply
+with all applicable export regulations applicable to the use or distribution
+of the Software.
+
+    6. Restrictions
+
+The Licensee SHALL NOT:
+
+    a. Refer to “Swift” or use the “Swift” name in connection with any
+modified versions of the Software or other derivative works, including in
+documentation, marketing materials, or metadata.
+
+    b. Make any reference to “Swift” that could reasonably be interpreted as
+implying endorsement, sponsorship, or approval by Swift of the modified
+Software or its derivative works.
+
+    c. Use the Software for any purpose that is illegal, unethical, or
+otherwise in breach of applicable laws, and regulations.
+
+    d. Make any reference to “Swift” that might induce to erroneously believe
+that:
+
+        - The licensee’s products and services are developed or supplied by
+Swift, under its control, or jointly with that third party,
+
+        - Swift is responsible for the quality of the licensee’s or other
+third-party products and services.
+
+
+
+“Derivative works” shall mean any work, whether in source or object form, that
+is based on (or derived from) the Software and for which the editorial
+revisions, annotations, elaborations, or other modifications represent, as a
+whole, an original work of authorship.
+
+    7. Redistribution
+
+You may reproduce and distribute copies of the Software or derivative works
+thereof in any medium, with or without modifications, provided that You meet
+the following conditions:
+
+    a. You must give any other recipients of the Software or its derivative
+works a copy of this License; and
+
+    b. You must cause any modified files to carry prominent notices stating
+that You changed the files and describe changes; and
+
+    c. You must retain all copyright and attribution notices of the Software.
+
+   8. Intellectual Property
+
+All intellectual property rights in the Software remain the exclusive property
+of Swift and its licensors.
+
+You may grant sub-licenses provided that any such sub-license remains within
+the scope of your rights under this License.
+
+This License does not grant any rights to use Swift’s trademarks except to
+identify Swift as the Software developer by adding copyright notice above. The
+use of Swift logo is not permitted. Any use of the Swift trademarks shall
+comply with the Swift Trademark Guidelines available on www.swift.com.
+
+If You initiate any legal proceeding or claim (including a cross-claim or
+counterclaim) alleging that the Software infringes a patent that You own or
+control, then any licenses granted to You under this Agreement shall
+automatically terminate as of the date such claim is filed.
+
+    9. Non-Compliance
+
+Your License for Software will terminate immediately without notice if the
+Licensee fails to comply with any provision of this License Agreement.
+
+    10. Governing Law and Dispute Resolution
+
+This License is governed by and subject to the laws of Belgium. Any dispute
+arising out of or in connection with this License shall be finally settled
+under the Rules of Conciliation and Arbitration of the International Chamber
+of Commerce (ICC) by three arbitrators. The arbitration shall take place in
+Brussels, Belgium, and be conducted in English.
+
+ 

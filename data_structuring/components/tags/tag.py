@@ -1,0 +1,39 @@
+"""
+Module providing the tag classes.
+"""
+from enum import StrEnum
+
+
+class Tag(StrEnum):
+    """
+    Represents a Tag, as given in the `DetailsDataset` class.
+    """
+
+    # Tag for all other tags
+    OTHER = "OTHER"
+
+    COUNTRY = "COUNTRY"
+    TOWN = "TOWN"
+    STREET = "STREET"
+    POSTAL_CODE = "POSTAL_CODE"
+    CONTINENT = "CONTINENT"
+    GENERIC_WORD = "GENERIC_WORD"
+    NATURAL_PERSON_NAME = "NATURAL_PERSON_NAME"
+    FINANCIAL_INSTITUTION = "FINANCIAL_INSTITUTION"
+    # STOP_WORD = "STOP_WORD"
+    BUSINESS_ENTITY_NAME = "BUSINESS_ENTITY_NAME"
+    BUSINESS_ENTITY_TYPE = "BUSINESS_ENTITY_TYPE"
+    MONTH = "MONTH"
+    YEAR = "YEAR"
+    IBAN = "IBAN"
+    FLOAT = "FLOAT"
+    INTEGER = "INTEGER"
+    ALPHANUMERIC = "ALPHANUMERIC"
+    CURRENCY = "CURRENCY"
+    FINANCIAL_JARGON = "FINANCIAL_JARGON"
+    SEPARATOR = "SEPARATOR"
+
+    HOUSE_NUMBER = "HOUSE_NUMBER"
+    DATE = "DATE"
+    SPECIFIER = "SPECIFIER"
+    PHONE_NUMBER = "PHONE_NUMBER"

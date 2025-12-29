@@ -1,0 +1,2 @@
+[console_scripts]
+iso_run = data_structuring.run:_cli

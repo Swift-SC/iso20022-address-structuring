@@ -1,0 +1,1 @@
+To report any security issue or vulnerability, please refer to our standard procedures for [reporting a security issue](https://www.swift.com/contact-us/security-issue-vulnerability).

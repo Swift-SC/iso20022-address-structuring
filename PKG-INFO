@@ -1,3 +1,39 @@
+Metadata-Version: 2.4
+Name: swift_address_structuring
+Version: 1.0.0
+Summary: ISO Address Structuring Package
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+License-File: LICENSE.pdf
+Requires-Dist: anyascii==0.3.3
+Requires-Dist: orjson==3.11.2
+Requires-Dist: torch==2.8.0
+Requires-Dist: fuzzysearch==0.7.3
+Requires-Dist: polars==1.34.0
+Requires-Dist: pydantic==2.11.10
+Requires-Dist: pydantic-settings==2.10.1
+Requires-Dist: safetensors==0.6.2
+Requires-Dist: RapidFuzz==3.13.0
+Requires-Dist: fastparquet==2024.11.0
+Requires-Dist: jellyfish==1.2.0
+Provides-Extra: dev
+Requires-Dist: pandas==2.3.1; extra == "dev"
+Requires-Dist: geopandas==1.0.1; extra == "dev"
+Requires-Dist: scikit-learn==1.6.0; extra == "dev"
+Requires-Dist: Flask==3.0.3; extra == "dev"
+Requires-Dist: python-dotenv==1.0.1; extra == "dev"
+Requires-Dist: ijson==3.3.0; extra == "dev"
+Requires-Dist: tqdm==4.67.0; extra == "dev"
+Requires-Dist: overpy==0.7; extra == "dev"
+Requires-Dist: ipython==8.18.1; extra == "dev"
+Requires-Dist: jupyter==1.1.1; extra == "dev"
+Requires-Dist: seaborn==0.13.2; extra == "dev"
+Requires-Dist: colored==2.2.4; extra == "dev"
+Requires-Dist: faker==33.0.0; extra == "dev"
+Requires-Dist: matplotlib==3.9.2; extra == "dev"
+Dynamic: license-file
+
 # The Swift AI address structuring model
 
 The address structuring model, aims to assist the community with the transition from unstructured postal addresses to
@@ -18,8 +54,7 @@ Before installing, ensure the following prerequisites are met:
 - Python 3.12 or higher
 - pip (Python package installer)
 - System compatible with PyTorch 2.6.0
-- Swift Address Structuring model codebase (content of this repository)
-- Swift Address Structuring model resources ([link](https://github.com/Swift-SC/iso20022-address-structuring-resources)) 
+- Swift Address Structuring model codebase (downloaded from Swift.com)
 - Access to GeoNames to fetch the necessary files from the GeoNames export FTP server
 
 ### Environment Setup
