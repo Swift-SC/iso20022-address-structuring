@@ -162,7 +162,8 @@ class RunnerPostProcessing(BaseRunner):
 
             # Filter country codes with zero score and merge
             fuzzy_match_result.country_code_matches = FuzzyMatchResult([
-                match for match in fuzzy_match_result.country_code_matches if match.crf_score > 0
+                match for match in fuzzy_match_result.country_code_matches
+                if match.crf_score > 0 or match.origin == crf_result.details.country_code
             ])
             fuzzy_match_result.country_matches = FuzzyMatchResult.merge(
                 fuzzy_match_result.country_matches,
