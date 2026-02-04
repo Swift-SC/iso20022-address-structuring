@@ -93,6 +93,18 @@ resources
 │       └── countriesV3.1.json
 ```
 
+### (Optional) Running the unit tests
+
+This repository includes several unit tests to ensure the model works as intended.
+The tests are run using the *pytest* Python testing framework and are executed with the following command: 
+
+```bash
+python3.12 -m pytest tests
+```
+
+The tests may take some time to run as the *test_model.py* script runs the full model to ensure 
+that the model maintains an adequate level of performance.
+
 ### Usage
 
 Running the model can be run on the provided input CSV file by using the following command:
