@@ -81,6 +81,60 @@ def test_generate_combinations_with_matched_pairs():
     assert result[1][1].possibility == "NEW-YORK"  # Town
     assert result[1][2] == (0.9 + 0.75) / 2  # Score
 
+    # Set the correct suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([country1, country2],
+                                             [town1, town2],
+                                             no_country,
+                                             no_town)
+
+    # Verify
+    assert len(result) == 6
+
+    # Force the correctly suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([country1, country2],
+                                             [town1, town2],
+                                             no_country,
+                                             no_town)
+
+    # Verify
+    assert len(result) == 3
+
+    # Set an incorrect suggested country
+    generator.set_suggested_country("BE")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([country1, country2],
+                                             [town1, town2],
+                                             no_country,
+                                             no_town)
+
+    # Verify
+    assert len(result) == 6
+
+    # Force the incorrectly suggested country
+    generator.set_suggested_country("BE")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([country1, country2],
+                                             [town1, town2],
+                                             no_country,
+                                             no_town)
+
+    # Verify only empty country and town remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
 
 def test_generate_combinations_solo_country():
     """Test generate_combinations with country but no matching town."""
@@ -109,6 +163,54 @@ def test_generate_combinations_solo_country():
     assert result[0][0].origin == "US"  # Country
     assert result[0][1].possibility == "NO TOWN"  # No town
 
+    # Set the correct suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([country], [], no_country, no_town)
+
+    # Verify
+    assert len(result) == 1
+    assert result[0][0].origin == "US"  # Country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
+    # Force the correctly suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([country], [], no_country, no_town)
+
+    # Verify only the US possibility remains
+    assert len(result) == 1
+    assert result[0][0].origin == "US"  # Country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
+    # Set an incorrect suggested country
+    generator.set_suggested_country("BE")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([country], [], no_country, no_town)
+
+    # Verify only the US possibility remains
+    assert len(result) == 1
+    assert result[0][0].origin == "US"  # Country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
+    # Force the incorrectly suggested country
+    generator.set_suggested_country("BE")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([country], [], no_country, no_town)
+
+    # Verify only empty country and town remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
 
 def test_generate_combinations_solo_town():
     """Test generate_combinations with town but no matching country."""
@@ -134,9 +236,32 @@ def test_generate_combinations_solo_town():
 
     # Verify
     assert len(result) > 0
-    assert result[0][0].possibility == "NO COUNTRY"  # No country
+    assert result[0][0].origin == "NO COUNTRY"  # No country
     assert result[0][1].possibility == "SEATTLE"  # Town
 
+    # Set only the suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([], [town], no_country, no_town)
+
+    # Verify only empty country and 'SEATTLE' remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "SEATTLE"  # Town
+
+    # Force the suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([], [town], no_country, no_town)
+
+    # Verify only empty country and town remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "NO TOWN"  # No town
 
 def test_generate_combinations_no_matches():
     """Test generate_combinations with no country or town matches."""
@@ -158,8 +283,32 @@ def test_generate_combinations_no_matches():
 
     # Verify - should return default combination
     assert len(result) == 1
-    assert result[0][0].possibility == "NO COUNTRY"
+    assert result[0][0].origin == "NO COUNTRY"
     assert result[0][1].possibility == "NO TOWN"
+
+    # Set only the suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(False)
+
+    # Execute
+    result = generator.generate_combinations([], [], no_country, no_town)
+
+    # Verify only empty country and town remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "NO TOWN"  # No town
+
+    # Set only the suggested country
+    generator.set_suggested_country("US")
+    generator.set_force_suggested_country(True)
+
+    # Execute
+    result = generator.generate_combinations([], [], no_country, no_town)
+
+    # Verify only empty country and town remain
+    assert len(result) == 1
+    assert result[0][0].origin == "NO COUNTRY"  # No country
+    assert result[0][1].possibility == "NO TOWN"  # No town
 
 
 def test_generate_combinations_sorted_by_score():

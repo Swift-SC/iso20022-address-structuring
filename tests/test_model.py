@@ -5,14 +5,26 @@ import polars as pl
 import pytest
 
 import data_structuring
+from data_structuring.components.readers.base_reader import DEFAULT_ADDRESS_COLUMN, DEFAULT_SUGGESTED_COUNTRY_COLUMN, \
+    DEFAULT_FORCE_SUGGESTED_COUNTRY_COLUMN
 from data_structuring.components.readers.dataframe_reader import DataFrameReader
 from data_structuring.pipeline import AddressStructuringPipeline
+
+REQUIRED_COLUMNS = [
+    DEFAULT_ADDRESS_COLUMN,
+    DEFAULT_SUGGESTED_COUNTRY_COLUMN,
+    DEFAULT_FORCE_SUGGESTED_COUNTRY_COLUMN,
+    "country",
+    "town"
+]
 
 
 @pytest.fixture(autouse=True)
 def gauntlet_path():
-    return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_gauntlet.csv")
+    # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_gauntlet.csv")
+    return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_gauntlet_with_suggestions.csv")
     # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_wikipedia.csv")
+    # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_wikipedia_with_suggestions.csv")
 
 
 @pytest.fixture(autouse=True)
@@ -27,10 +39,13 @@ def test_gauntlet(gauntlet_path: str, batch_size: int):
         .with_columns(
             pl.col('town').fill_null("NO TOWN"),
             pl.col('country').fill_null("NO COUNTRY"))
-        .select("address", "country", "town")
     )
+    df = df.select(list(set(df.columns).intersection(REQUIRED_COLUMNS)))
 
-    reader = DataFrameReader(df, "address")
+    reader = DataFrameReader(dataframe=df,
+                             data_column_name=DEFAULT_ADDRESS_COLUMN,
+                             suggested_country_column=DEFAULT_SUGGESTED_COUNTRY_COLUMN,
+                             force_suggested_country_column=DEFAULT_FORCE_SUGGESTED_COUNTRY_COLUMN)
     towns = df["town"].to_list()
     countries = df["country"].to_list()
 
@@ -72,10 +87,10 @@ def test_gauntlet(gauntlet_path: str, batch_size: int):
     n_correct_all = len(df.filter((pl.col('is_correct_town')) & (pl.col('is_correct_country'))))
 
     # Convert to accuracy
-    n_correct_countries /= len(df)
-    n_correct_towns /= len(df)
-    n_correct_no_countries /= len(df)
-    n_correct_no_towns /= len(df)
+    n_correct_countries /= max(len(df.filter(~pl.col('is_no_country'))), 1)
+    n_correct_towns /= max(len(df.filter(~pl.col('is_no_town'))), 1)
+    n_correct_no_countries /= max(len(df.filter(pl.col('is_no_country'))), 1)
+    n_correct_no_towns /= max(len(df.filter(pl.col('is_no_town'))), 1)
     n_gt_match_countries /= len(df)
     n_gt_match_towns /= len(df)
     n_correct_all /= len(df)
