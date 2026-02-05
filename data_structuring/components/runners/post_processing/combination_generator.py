@@ -1,8 +1,8 @@
 """Combination generation - Single Responsibility: Generate country-town combinations."""
 
+from data_structuring.components.database import Database
 from data_structuring.components.flags import TownFlag, CountryFlag
 from data_structuring.components.fuzzy_matching.fuzzy_scan import FuzzyMatch
-from data_structuring.components.database import Database
 from data_structuring.config import (
     PostProcessingConfig,
     PostProcessingTownWeightsConfig,
@@ -14,23 +14,31 @@ class CombinationGenerator:
     """Generates and scores country-town combinations."""
 
     def __init__(
-        self,
-        database: Database,
-        config: PostProcessingConfig,
-        town_weights: PostProcessingTownWeightsConfig,
-        country_weights: PostProcessingCountryWeightsConfig
+            self,
+            database: Database,
+            config: PostProcessingConfig,
+            town_weights: PostProcessingTownWeightsConfig,
+            country_weights: PostProcessingCountryWeightsConfig
     ):
         self.database = database
         self.config = config
         self.town_weights = town_weights
         self.country_weights = country_weights
+        self.suggested_country = None
+        self.force_suggested_country = False
+
+    def set_suggested_country(self, suggested_country: str | None = None):
+        self.suggested_country = suggested_country
+
+    def set_force_suggested_country(self, force_suggested_country: bool = False):
+        self.force_suggested_country = force_suggested_country
 
     def generate_combinations(
-        self,
-        countries_above_threshold: list[FuzzyMatch],
-        towns_above_threshold: list[FuzzyMatch],
-        no_country: FuzzyMatch,
-        no_town: FuzzyMatch
+            self,
+            countries_above_threshold: list[FuzzyMatch],
+            towns_above_threshold: list[FuzzyMatch],
+            no_country: FuzzyMatch,
+            no_town: FuzzyMatch
     ) -> list[tuple[FuzzyMatch, FuzzyMatch, float]]:
         """
         Generate scored combinations of country and town matches.
@@ -91,6 +99,12 @@ class CombinationGenerator:
                           country_match: FuzzyMatch
                           ) -> bool:
         """Check if country-town pair should be skipped."""
+        # When force_suggested_country is set, filter combinations to only
+        # keep those matching the suggested country code
+        if self.suggested_country and self.force_suggested_country:
+            if country_match.origin != self.suggested_country:
+                return True
+
         # Same position but not a known same-name case
         if (town_match.start == country_match.start
                 and town_match.end == country_match.end
@@ -114,13 +128,17 @@ class CombinationGenerator:
         combinations = []
 
         for country_match in countries:
+            if self.suggested_country and self.force_suggested_country:
+                if country_match.origin != self.suggested_country:
+                    continue
+
             cumulative_malus = self.config.no_town_found_mul * sum([
                 self.country_weights.town_is_present if (
-                    CountryFlag.TOWN_IS_PRESENT in country_match.flags) else 0,
+                        CountryFlag.TOWN_IS_PRESENT in country_match.flags) else 0,
                 self.country_weights.is_very_close_to_town if (
-                    CountryFlag.IS_VERY_CLOSE_TO_TOWN in country_match.flags) else 0,
+                        CountryFlag.IS_VERY_CLOSE_TO_TOWN in country_match.flags) else 0,
                 self.country_weights.is_on_same_line_as_town if (
-                    CountryFlag.IS_ON_SAME_LINE_AS_TOWN in country_match.flags) else 0
+                        CountryFlag.IS_ON_SAME_LINE_AS_TOWN in country_match.flags) else 0
             ])
 
             score = (country_match.final_score + self.config.minimal_final_score_town - cumulative_malus) / 2
@@ -129,21 +147,26 @@ class CombinationGenerator:
         return combinations
 
     def _generate_solo_towns(
-        self,
-        towns: list[FuzzyMatch],
-        no_country: FuzzyMatch
+            self,
+            towns: list[FuzzyMatch],
+            no_country: FuzzyMatch
     ) -> list[tuple[FuzzyMatch, FuzzyMatch, float]]:
         """Generate combinations for towns without matching countries."""
         combinations = []
 
+        if self.suggested_country and self.force_suggested_country and self.suggested_country != "NO COUNTRY":
+            return combinations
+
         for town_match in towns:
             cumulative_malus = self.config.no_country_found_mul * sum([
                 self.town_weights.country_is_present_bonus if (
-                    TownFlag.COUNTRY_IS_PRESENT in town_match.flags) else 0,
+                        TownFlag.COUNTRY_IS_PRESENT in town_match.flags) else 0,
+                self.town_weights.suggested_country_is_present_bonus if (
+                        TownFlag.SUGGESTED_COUNTRY_IS_PRESENT in town_match.flags) else 0,
                 self.town_weights.is_very_close_to_country if (
-                    TownFlag.IS_VERY_CLOSE_TO_COUNTRY in town_match.flags) else 0,
+                        TownFlag.IS_VERY_CLOSE_TO_COUNTRY in town_match.flags) else 0,
                 self.town_weights.is_on_same_line_as_country if (
-                    TownFlag.IS_ON_SAME_LINE_AS_COUNTRY in town_match.flags) else 0
+                        TownFlag.IS_ON_SAME_LINE_AS_COUNTRY in town_match.flags) else 0
             ])
 
             score = (self.config.minimal_final_score_country + town_match.final_score - cumulative_malus) / 2
@@ -152,8 +175,8 @@ class CombinationGenerator:
         return combinations
 
     def _deduplicate_combinations(
-        self,
-        combinations: list[tuple[FuzzyMatch, FuzzyMatch, float]]
+            self,
+            combinations: list[tuple[FuzzyMatch, FuzzyMatch, float]]
     ) -> list[tuple[FuzzyMatch, FuzzyMatch, float]]:
         """Remove duplicate country-town combinations."""
         already_found = {}

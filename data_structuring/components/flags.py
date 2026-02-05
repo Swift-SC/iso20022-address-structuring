@@ -11,6 +11,8 @@ class BaseFlag(StrEnum):
 class TownFlag(BaseFlag):
     # The country containing the town is in the message
     COUNTRY_IS_PRESENT = "COUNTRY_IS_PRESENT"
+    # The suggested country containing the town is in the message
+    SUGGESTED_COUNTRY_IS_PRESENT = "SUGGESTED_COUNTRY_IS_PRESENT"
     # The MLP infers the country containing the town is in the message
     MLP_COUNTRY_IS_PRESENT = "MLP_COUNTRY_IS_PRESENT"
     # We are very close to the country of that town in the message
@@ -78,3 +80,7 @@ class CountryFlag(BaseFlag):
     MLP_AGREES = "MLP_AGREES"
     # The MLP country prediction result is between 50% to 89%
     MLP_DOESNT_DISAGREE = "MLP_DOESNT_DISAGREE"
+    # Indicates the match corresponds to the suggested country
+    IS_SUGGESTED_COUNTRY = "IS_SUGGESTED_COUNTRY"
+    # Indicates the match was generated synthetically by adding the suggested country to the list of matches
+    GENERATED_BY_SUGGESTED_COUNTRY = "GENERATED_BY_SUGGESTED_COUNTRY"
