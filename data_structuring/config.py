@@ -136,6 +136,10 @@ class PostProcessingConfig(BaseSettingsISO):
     minimal_final_score_town: float = 0.15
     iban_pattern: str = r"(?=([A-Z]{2}\d{2}(?:[ ]?[A-Z0-9]{4}){1,7}))"
 
+    # Base score to be applied on the suggested country
+    # if the forced_suggested_country flag is not set
+    base_score_suggested_country: float = 0.95
+
     # List of countries that typically include their provinces in their addresses
     # and frequently use the abbreviations for these provinces
     countries_with_common_provinces: list[str] = ['CN', 'US']
@@ -159,6 +163,7 @@ class PostProcessingTownWeightsConfig(BaseSettingsISO):
     is_in_last_third: float = 0.01
     could_be_reasonable_mistake: float = 0.25
     country_is_present_bonus: float = 0.15
+    suggested_country_is_present_bonus: float = 0.65
     mlp_country_is_present_bonus: float = 0.05
     is_very_close_to_country: float = 0.30
     is_on_same_line_as_country: float = 0.15
@@ -255,7 +260,7 @@ class CRFConfig(BaseSettingsISO):
         )
     )
 
-    # NOTE Use small regularisations on the emissions, as this allows the
+    # NOTE Use small regularisation on the emissions, as this allows the
     # transformer to "hesitate" a little between the plausible tags.
     # But zero regularisation leads to some overfitting.
     regularisation_emissions: float = 1e-3

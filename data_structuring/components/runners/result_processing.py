@@ -73,6 +73,9 @@ class ResultPostProcessing(BaseModel):
     crf_result: ResultRunnerCRF = Field(description="The result of the CRF runner on the message")
     fuzzy_match_result: ResultRunnerFuzzyMatch = Field(description="The result of the fuzzymatch runner on the message")
     ibans: list[str] = Field(description="A list of the IBANs that have been identified in the message")
+    suggested_country: str | None = Field(default=None, description="The suggested country code from the input")
+    force_suggested_country: bool = Field(default=False,
+                                          description="Whether the suggested country was forced as the only possibility")
 
     def _i_th_best_match(self,
                          i: int,
@@ -139,6 +142,10 @@ class ResultPostProcessing(BaseModel):
 
             # Start the row creation
             current_row = {"address": result.crf_result.details.content}
+
+            if result.suggested_country:
+                current_row["suggested_country"] = result.suggested_country
+                current_row["force_suggested_country"] = str(result.force_suggested_country)
 
             # Add all best country/town matches, with their respective confidence
             for i in range(n_best_matches):
