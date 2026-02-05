@@ -9,3 +9,4 @@ safetensors==0.6.2
 RapidFuzz==3.13.0
 fastparquet==2024.11.0
 jellyfish==1.2.0
+pytest==9.0.2

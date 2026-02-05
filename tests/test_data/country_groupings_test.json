@@ -1,0 +1,5 @@
+{
+  "EU": ["FR", "DE", "IT", "ES"],
+  "NAFTA": ["US", "CA", "MX"],
+  "ASEAN": ["SG", "MY", "TH"]
+}

@@ -18,6 +18,7 @@ Requires-Dist: RapidFuzz==3.13.0
 Requires-Dist: fastparquet==2024.11.0
 Requires-Dist: jellyfish==1.2.0
 Provides-Extra: dev
+Requires-Dist: pytest==9.0.2; extra == "dev"
 Requires-Dist: pandas==2.3.1; extra == "dev"
 Requires-Dist: geopandas==1.0.1; extra == "dev"
 Requires-Dist: scikit-learn==1.6.0; extra == "dev"
