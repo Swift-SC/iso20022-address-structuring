@@ -175,14 +175,15 @@ class RunnerPostProcessing(BaseRunner):
                         match.crf_score = max(match.crf_score, self.config.base_score_suggested_country)
                         best_crf_score = max(match.crf_score, best_crf_score)
 
-                suggested_country_match = FuzzyMatch(start=len(address_sample.text) + 2,
-                                                     end=len(address_sample.text) + 2,
-                                                     matched="", dist=0, origin=suggested_country,
-                                                     possibility=suggested_country,
-                                                     crf_score=best_crf_score,
-                                                     flags=[CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY])
-                fuzzy_match_result.country_code_matches = FuzzyMatchResult.merge(
-                    fuzzy_match_result.country_code_matches, FuzzyMatchResult([suggested_country_match]))
+                if suggested_country != "NO COUNTRY":
+                    suggested_country_match = FuzzyMatch(start=len(address_sample.text) + 2,
+                                                         end=len(address_sample.text) + 2,
+                                                         matched="", dist=0, origin=suggested_country,
+                                                         possibility=suggested_country,
+                                                         crf_score=best_crf_score,
+                                                         flags=[CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY])
+                    fuzzy_match_result.country_code_matches = FuzzyMatchResult.merge(
+                        fuzzy_match_result.country_code_matches, FuzzyMatchResult([suggested_country_match]))
 
             # Filter country codes with zero score and merge
             fuzzy_match_result.country_code_matches = FuzzyMatchResult([
@@ -262,10 +263,16 @@ class RunnerPostProcessing(BaseRunner):
                     town_result.flags
                 )
 
+            minimal_final_score_country = (
+                self.config.base_score_suggested_country
+                if suggested_country == "NO COUNTRY"
+                else self.config.minimal_final_score_country
+            )
+
             # Generate country-town combinations using CombinationGenerator
             no_country = FuzzyMatch(start=0, end=0, matched="", dist=0, origin="NO COUNTRY",
                                     possibility="NO COUNTRY",
-                                    final_score=self.config.minimal_final_score_country)
+                                    final_score=minimal_final_score_country)
             no_town = FuzzyMatch(start=0, end=0, matched="", dist=0, origin="",
                                  possibility="NO TOWN",
                                  final_score=self.config.minimal_final_score_town)
