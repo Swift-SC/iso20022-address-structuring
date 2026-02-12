@@ -15,6 +15,7 @@ POSSIBLE_FORCED_FLAG_VALUES = [
     "true",
     "1",
     "yes",
+    "y"
 ]
 
 

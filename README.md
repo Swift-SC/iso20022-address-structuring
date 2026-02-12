@@ -133,7 +133,7 @@ can be used in one of two ways:
 The suggested country should be stored in a column called "suggested_country" and can only be in the form of the
 country's 2-letter ISO code or "NO COUNTRY" (if you wish to suggest that there should not be a country in the model's
 output). The flag to enable either soft or hard suggestion mode should be stored in a column named "
-force_suggested_country" and must be either "true", "1", or "yes".
+force_suggested_country" and must be either "true", "1", "yes", or "y".
 
 Examples of input files enabling this feature can be found in the resources/input folder (look for files containing the
 suffix "with_suggestions").
@@ -174,14 +174,14 @@ The baselines model accuracy statistics are as follows:
 # addresses_gauntlet.csv
 {
     # General accuracy
-    'General country accuracy': 0.8530092592592593,
-    'General town accuracy': 0.7858796296296297,
-    'Combined general accuracy': 0.6944444444444444,
+    'General country accuracy': 0.8541666666666666,
+    'General town accuracy': 0.7870370370370371,
+    'Combined general accuracy': 0.6956018518518519,
     # Specific accuracy scores
-    'Correct country (present) accuracy': 0.65625,
-    'Correct town (present) accuracy': 0.7164351851851852,
-    'Correct country (not present) accuracy': 0.19675925925925927,
-    'Correct town (not present) accuracy': 0.06944444444444445,
+    'Correct country (present) accuracy': 0.8847352024922118,
+    'Correct town (present) accuracy': 0.8062418725617685,
+    'Correct country (not present) accuracy': 0.7657657657657657,
+    'Correct town (not present) accuracy': 0.631578947368421,
     # Statistics about the dataset
     'Number of countries (present)': 642,
     'Number of towns (present)': 769,
@@ -192,13 +192,13 @@ The baselines model accuracy statistics are as follows:
 {
     # General accuracy
     'General country accuracy': 1.0,
-    'General town accuracy': 0.7013888888888888,
-    'Combined general accuracy': 0.7013888888888888,
+    'General town accuracy': 0.8055555555555556,
+    'Combined general accuracy': 0.8055555555555556,
     # Specific accuracy scores
     'Correct country (present) accuracy': 1.0,
-    'Correct town (present) accuracy': 0.6840052015604682,
+    'Correct town (present) accuracy': 0.8244473342002601,
     'Correct country (not present) accuracy': 1.0,
-    'Correct town (not present) accuracy': 0.8421052631578947,
+    'Correct town (not present) accuracy': 0.6526315789473685,
     # Statistics about the dataset
     'Number of countries (present)': 642,
     'Number of towns (present)': 769,
@@ -212,9 +212,9 @@ The baselines model accuracy statistics are as follows:
     'General town accuracy': 0.5948717948717949,
     'Combined general accuracy': 0.517948717948718,
     # Specific accuracy scores
-    'Correct country (present) accuracy': 0.6358974358974359,
+    'Correct country (present) accuracy': 0.9393939393939394,
     'Correct town (present) accuracy': 0.5948717948717949,
-    'Correct country (not present) accuracy': 0.2,
+    'Correct country (not present) accuracy': 0.6190476190476191,
     'Correct town (not present) accuracy': 0.0,
     # Statistics about the dataset
     'Number of countries (present)': 132,
