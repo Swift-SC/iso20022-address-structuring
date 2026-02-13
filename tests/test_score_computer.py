@@ -327,6 +327,36 @@ def test_compute_country_score_combined_flags(score_computer):
     assert 0 <= score <= 1
 
 
+def test_compute_country_score_combined_flags_and_was_suggested_country(score_computer):
+    """Test compute_country_score with multiple bonus and malus flags."""
+    score = score_computer.compute_country_score(
+        crf_score=0.7, dist_score=1,
+        flags=[
+            CountryFlag.IS_SUGGESTED_COUNTRY,  # No effect; used for explainability
+            CountryFlag.TOWN_IS_PRESENT,  # Bonus
+            CountryFlag.IBAN_IS_PRESENT,  # Bonus
+            CommonFlag.IS_SHORT,  # Malus
+            CommonFlag.IS_IN_LAST_THIRD  # Bonus
+        ]
+    )
+
+    # Should still be a valid probability
+    assert 0 <= score <= 1
+
+
+def test_compute_country_score_when_generated_by_suggested_country(score_computer):
+    """Test compute_country_score when the GENERATED_BY_SUGGESTED_COUNTRY flag is present."""
+    score = score_computer.compute_country_score(
+        crf_score=0.7, dist_score=0,
+        flags=[
+            CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY
+        ]
+    )
+
+    # Should be the same as the crf_score
+    assert score == 0.7
+
+
 def test_compute_country_score_returns_valid_probability(score_computer):
     """Test that compute_country_score always returns valid probabilities."""
     test_cases = [

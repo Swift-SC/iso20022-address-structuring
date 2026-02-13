@@ -19,7 +19,7 @@ Before installing, ensure the following prerequisites are met:
 - pip (Python package installer)
 - System compatible with PyTorch 2.6.0
 - Swift Address Structuring model codebase (content of this repository)
-- Swift Address Structuring model resources ([link](https://github.com/Swift-SC/iso20022-address-structuring-resources)) 
+- Swift Address Structuring model resources ([link](https://github.com/Swift-SC/iso20022-address-structuring-resources))
 - Access to GeoNames to fetch the necessary files from the GeoNames export FTP server
 
 ### Environment Setup
@@ -27,7 +27,7 @@ Before installing, ensure the following prerequisites are met:
 Create the Python virtual environment (assuming Python 3.12):
 
 ```bash
-python3.12 -m venv env
+python3 -m venv env
 source env/bin/activate
 ``` 
 
@@ -36,7 +36,7 @@ Then download the required dependencies using pip
 
 ```bash
 export TMPDIR=path/to/new/directory
-python3.12 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 Finally, set the **PYTHONPATH** environment variable to the current directory:
@@ -52,31 +52,32 @@ use the following scripts to generate the necessary reference dataset files:
 
 ```bash
 # To install the towns and town aliases datasets
-python3.12 data_structuring/preprocessing/preprocess_geonames_towns.py \
+python3 data_structuring/preprocessing/preprocess_geonames_towns.py \
             --input_geonames_all_countries_path=path/to/allCountries.txt \
             --input_geonames_alternate_names_path=path/to/alternateNamesV2.txt \
             --input_geonames_country_info_path=path/to/countryInfo.txt
 
 # To install the countries and country aliases datasets
-python3.12 data_structuring/preprocessing/preprocess_geonames_countries.py \
+python3 data_structuring/preprocessing/preprocess_geonames_countries.py \
             --input_geonames_all_countries_path=path/to/allCountries.txt \
             --input_geonames_alternate_names_path=path/to/alternateNamesV2.txt \
             --input_geonames_country_info_path=path/to/countryInfo.txt
 
 # To install the postcodes datasets
-python3.12 data_structuring/preprocessing/preprocess_geonames_postcodes.py \
+python3 data_structuring/preprocessing/preprocess_geonames_postcodes.py \
             --input_geonames_postcodes_all_countries_path=path/to/postcodes/allCountries.txt \
             --input_geonames_postcodes_ca_full_path=path/to/postcodes/CA_full.txt \
             --input_geonames_postcodes_gb_full_path=path/to/postcodes/GB_full.txt \
             --input_geonames_postcodes_nl_full_path=path/to/postcodes/NL_full.txt
 
 # To install the country_specs dataset
-python3.12 scripts/preprocess_rest_countries.py \
+python3 scripts/preprocess_rest_countries.py \
             --input_rest_countries_path=path/to/countriesV3.1.json
 ```
 
-**N.B.**: the input arguments can be *ignored* if all the downloaded files are put in the `resources/raw` folder as this is the path used by default.
-In this case, the file structure should look like this:
+**N.B.**: the input arguments can be *ignored* if all the downloaded files are put in the `resources/raw` folder as this
+is the path used by default. In this case, the file structure should look like this:
+
 ```
 resources
 ├── raw
@@ -96,13 +97,13 @@ resources
 ### (Optional) Running the unit tests
 
 This repository includes several unit tests to ensure the model works as intended.
-The tests are run using the *pytest* Python testing framework and are executed with the following command: 
+The tests are run using the *pytest* Python testing framework and are executed with the following command:
 
 ```bash
-python3.12 -m pytest tests
+python3 -m pytest tests
 ```
 
-The tests may take some time to run as the *test_model.py* script runs the full model to ensure 
+The tests may take some time to run as the *test_model.py* script runs the full model to ensure
 that the model maintains an adequate level of performance.
 
 ### Usage
@@ -110,7 +111,7 @@ that the model maintains an adequate level of performance.
 Running the model can be run on the provided input CSV file by using the following command:
 
 ```bash
-python3.12 data_structuring/run.py \
+python3 data_structuring/run.py \
             --input_data_path=data/input/addresses_gauntlet.csv \
             --verbose
 ```
@@ -118,143 +119,124 @@ python3.12 data_structuring/run.py \
 This will generate an output file with the name *data_structuring_output.csv* with all the explainability columns
 present.
 
+### Leveraging country suggestion
+
+It is possible to provide the model with country suggestions for certain addresses. In this case, the provided country
+can be used in one of two ways:
+
+- **Soft suggestion mode**: The suggested country will be added to the model's list of possible country suggestions (if
+  it is not detected), and every possibility matching this country will receive a significant score boost (the score
+  boost amount can be configured)
+- **Hard suggestion mode**: Same as for the soft suggestion mode, however, the model's output is limited to
+  possibilities located in this country
+
+The suggested country should be stored in a column called "suggested_country" and can only be in the form of the
+country's 2-letter ISO code or "NO COUNTRY" (if you wish to suggest that there should not be a country in the model's
+output). The flag to enable either soft or hard suggestion mode should be stored in a column named "
+force_suggested_country" and must be either "true", "1", "yes", or "y".
+
+Examples of input files enabling this feature can be found in the resources/input folder (look for files containing the
+suffix "with_suggestions").
+
 ### Configuration and assessing model performance
 
-Most parameters are controlled from the *config.py* file, or manually set up when creating the runners using the API. 
+Most parameters are controlled from the *config.py* file, or manually set up when creating the runners using the API.
 Please refer to the more complete User Documentation for more.
 
-In general, the default settings should provide satisfactory performance. There are nonetheless valid circumstances 
-where the model may under-perform. In these cases, experimentation is recommended and to aid with this, 
-the provided *addresses_gauntlet.csv* input file can be used to assess whether performance has been increased/decreased compared to the baseline.
+In general, the default settings should provide satisfactory performance. There are nonetheless valid circumstances
+where the model may under-perform. In these cases, experimentation is recommended and to aid with this, the provided
+*addresses_gauntlet.csv* input file can be used to assess whether performance has been increased/decreased compared to
+the baseline.
 
-The following script provides a simple way to run the model on the provided *addresses_gauntlet.csv* input file and calculate the performance of the model:
+The tests/test_model.py script provides a simple way to run the model on the provided *addresses_gauntlet.csv* input
+file (or any of the other input files) and calculate the performance of the model. The input file can be chosen by
+modifying the script and uncommenting the required line under the *gauntlet_path* function (only one line should be
+uncommented at any time):
 
 ```python
-import polars as pl
+@pytest.fixture(autouse=True)
+def gauntlet_path():
+    return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_gauntlet.csv")
+    # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_gauntlet_with_suggestions.csv")
+    # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_wikipedia.csv")
+    # return Path(resources.files(data_structuring.__name__) / ".." / "resources" / "input" / "addresses_wikipedia_with_suggestions.csv")
+```
 
-import data_structuring
-from data_structuring.components.readers.dataframe_reader import DataFrameReader
-from data_structuring.pipeline import AddressStructuringPipeline
+The script can be run using the following command:
 
-
-def test_input(gauntlet_path: str, batch_size: int):
-    # Parse gauntlet
-    df = (
-        pl.read_csv(gauntlet_path, infer_schema=False)
-        .with_columns(
-            pl.col('town').fill_null("NO TOWN"),
-            pl.col('country').fill_null("NO COUNTRY"))
-        .select("address", "country", "town")
-    )
-
-    reader = DataFrameReader(df, "address")
-    towns = df["town"].fill_null("NO TOWN").to_list()
-    countries = df["country"].fill_null("NO COUNTRY").to_list()
-
-    # Start inference
-    ds = AddressStructuringPipeline()
-    results = ds.run(reader, batch_size=batch_size)
-
-    rows = []
-    for result, gt_country_code, town in zip(results, countries, towns):
-        prediction_country, confidence_country, ignored = result.i_th_best_match_country(0, value_if_none="NO COUNTRY")
-        prediction_town, confidence_town, ignored = result.i_th_best_match_town(0, value_if_none="NO TOWN")
-
-        rows.append({'pred_country': prediction_country, 'pred_town': prediction_town})
-
-    df = (
-        pl.concat([df, pl.DataFrame(rows)], how="horizontal")
-        .with_columns(
-            is_no_country=(pl.col('country') == pl.lit("NO COUNTRY")),
-            is_no_town=(pl.col('town') == pl.lit("NO TOWN")),
-            is_correct_country=(pl.col('country') == pl.col('pred_country')),
-            is_correct_town=(pl.col('town') == pl.col('pred_town')))
-    )
-
-    n_countries = len(df.filter(~pl.col('is_no_country')))
-    n_towns = len(df.filter(~pl.col('is_no_town')))
-
-    n_no_countries = len(df.filter(pl.col('is_no_country')))
-    n_no_towns = len(df.filter(pl.col('is_no_town')))
-
-    n_correct_countries = len(df.filter((~pl.col('is_no_country')) & (pl.col('is_correct_country'))))
-    n_correct_towns = len(df.filter((~pl.col('is_no_town')) & (pl.col('is_correct_town'))))
-
-    n_correct_no_countries = len(df.filter((pl.col('is_no_country')) & (pl.col('is_correct_country'))))
-    n_correct_no_towns = len(df.filter((pl.col('is_no_town')) & (pl.col('is_correct_town'))))
-
-    n_gt_match_countries = len(df.filter(pl.col('is_correct_country')))
-    n_gt_match_towns = len(df.filter(pl.col('is_correct_town')))
-
-    n_correct_all = len(df.filter((pl.col('is_correct_town')) & (pl.col('is_correct_country'))))
-
-    # Convert to accuracy
-    n_correct_countries /= len(df)
-    n_correct_towns /= len(df)
-    n_correct_no_countries /= len(df)
-    n_correct_no_towns /= len(df)
-    n_gt_match_countries /= len(df)
-    n_gt_match_towns /= len(df)
-    n_correct_all /= len(df)
-
-    return {
-        # General accuracy
-        "General country accuracy": n_gt_match_countries,
-        "General town accuracy": n_gt_match_towns,
-        "Combined general accuracy": n_correct_all,
-        # Specific accuracy scores
-        "Correct country (present) accuracy": n_correct_countries,
-        "Correct town (present) accuracy": n_correct_towns,
-        "Correct country (not present) accuracy": n_correct_no_countries,
-        "Correct town (not present) accuracy": n_correct_no_towns,
-        # Statistics about the dataset
-        "Number of countries (present)": n_countries,
-        "Number of towns (present)": n_towns,
-        "Number of countries (not present)": n_no_countries,
-        "Number of towns (not present)": n_no_towns
-    }
-
-
-if __name__ == "__main__":
-    input_path = f"{data_structuring.__name__}/data/input/addresses_gauntlet.csv"
-    batch_size = 1024
-    print(test_input(input_path, batch_size))
+```bash
+python3 -m pytest tests/test_model.py
 ```
 
 The baselines model accuracy statistics are as follows:
+
 ```python
 # addresses_gauntlet.csv
 {
     # General accuracy
-    'General country accuracy': 0.8530092592592593, 
-    'General town accuracy': 0.7858796296296297, 
-    'Combined general accuracy': 0.6944444444444444,  
+    'General country accuracy': 0.8541666666666666,
+    'General town accuracy': 0.7870370370370371,
+    'Combined general accuracy': 0.6956018518518519,
     # Specific accuracy scores
-    'Correct country (present) accuracy': 0.65625, 
-    'Correct town (present) accuracy': 0.7164351851851852, 
-    'Correct country (not present) accuracy': 0.19675925925925927, 
-    'Correct town (not present) accuracy': 0.06944444444444445,   
+    'Correct country (present) accuracy': 0.8847352024922118,
+    'Correct town (present) accuracy': 0.8062418725617685,
+    'Correct country (not present) accuracy': 0.7657657657657657,
+    'Correct town (not present) accuracy': 0.631578947368421,
     # Statistics about the dataset
-    'Number of countries (present)': 642, 
-    'Number of towns (present)': 769, 
-    'Number of countries (not present)': 222, 
+    'Number of countries (present)': 642,
+    'Number of towns (present)': 769,
+    'Number of countries (not present)': 222,
+    'Number of towns (not present)': 95
+}
+# addresses_gauntlet.csv with country suggestion
+{
+    # General accuracy
+    'General country accuracy': 1.0,
+    'General town accuracy': 0.8055555555555556,
+    'Combined general accuracy': 0.8055555555555556,
+    # Specific accuracy scores
+    'Correct country (present) accuracy': 1.0,
+    'Correct town (present) accuracy': 0.8244473342002601,
+    'Correct country (not present) accuracy': 1.0,
+    'Correct town (not present) accuracy': 0.6526315789473685,
+    # Statistics about the dataset
+    'Number of countries (present)': 642,
+    'Number of towns (present)': 769,
+    'Number of countries (not present)': 222,
     'Number of towns (not present)': 95
 }
 # Wikipedia dataset
 {
     # General accuracy
     'General country accuracy': 0.8358974358974359,
-    'General town accuracy': 0.5948717948717949, 
-    'Combined general accuracy': 0.517948717948718, 
+    'General town accuracy': 0.5948717948717949,
+    'Combined general accuracy': 0.517948717948718,
     # Specific accuracy scores
-    'Correct country (present) accuracy': 0.6358974358974359, 
-    'Correct town (present) accuracy': 0.5948717948717949, 
-    'Correct country (not present) accuracy': 0.2, 
-    'Correct town (not present) accuracy': 0.0,  
+    'Correct country (present) accuracy': 0.9393939393939394,
+    'Correct town (present) accuracy': 0.5948717948717949,
+    'Correct country (not present) accuracy': 0.6190476190476191,
+    'Correct town (not present) accuracy': 0.0,
     # Statistics about the dataset
-    'Number of countries (present)': 132, 
-    'Number of towns (present)': 195, 
-    'Number of countries (not present)': 63, 
+    'Number of countries (present)': 132,
+    'Number of towns (present)': 195,
+    'Number of countries (not present)': 63,
+    'Number of towns (not present)': 0
+}
+# Wikipedia with country suggestion dataset
+{
+    # General accuracy
+    'General country accuracy': 1.0,
+    'General town accuracy': 0.5948717948717949,
+    'Combined general accuracy': 0.5948717948717949,
+    # Specific accuracy scores
+    'Correct country (present) accuracy': 1.0,
+    'Correct town (present) accuracy': 0.5948717948717949,
+    'Correct country (not present) accuracy': 0.0,
+    'Correct town (not present) accuracy': 0.0,
+    # Statistics about the dataset
+    'Number of countries (present)': 195,
+    'Number of towns (present)': 195,
+    'Number of countries (not present)': 0,
     'Number of towns (not present)': 0
 }
 ```

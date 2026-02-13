@@ -59,8 +59,8 @@ class MatchInclusionFlagger:
 
     @staticmethod
     def flag_matches_included_in_another(
-        queries: list[FuzzyMatch],
-        larger_matches: FuzzyMatchResult
+            queries: list[FuzzyMatch],
+            larger_matches: FuzzyMatchResult
     ) -> None:
         """
         Flag matches included in other matches with position-aware flags.
@@ -250,6 +250,9 @@ class RelationshipFlagManager:
 
         # Add basic presence flags
         is_extended_data = TownFlag.IS_FROM_EXTENDED_DATA in town_match.flags
+        if (CountryFlag.IS_SUGGESTED_COUNTRY in country_match.flags
+                or CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY in country_match.flags):
+            town_match.flags.append(TownFlag.SUGGESTED_COUNTRY_IS_PRESENT)
         town_match.flags.append(TownFlag.COUNTRY_IS_PRESENT)
         if not is_extended_data:
             country_match.flags.append(CountryFlag.TOWN_IS_PRESENT)
@@ -267,13 +270,13 @@ class RelationshipFlagManager:
 
         character_distance = len(string_between)
 
-        # Add proximity flags
-        if character_distance <= 15:
+        # Add proximity flags except if pair contains a synthetically generated match
+        if character_distance <= 15 and CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY not in country_match.flags:
             town_match.flags.append(TownFlag.IS_VERY_CLOSE_TO_COUNTRY)
             if not is_extended_data:
                 country_match.flags.append(CountryFlag.IS_VERY_CLOSE_TO_TOWN)
 
-        if "\n" not in string_between:
+        if "\n" not in string_between and CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY not in country_match.flags:
             town_match.flags.append(TownFlag.IS_ON_SAME_LINE_AS_COUNTRY)
             if not is_extended_data:
                 country_match.flags.append(CountryFlag.IS_ON_SAME_LINE_AS_TOWN)

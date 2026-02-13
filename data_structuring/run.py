@@ -1,19 +1,22 @@
 """
 This module provides an interface to running pipeline for address structuring.
 """
-import sys
-import orjson
 import logging
 import logging.config
+import sys
 # Standard libraries
 import warnings
+
+import orjson
+
+from data_structuring.components.readers.base_reader import DEFAULT_ADDRESS_COLUMN, DEFAULT_SUGGESTED_COUNTRY_COLUMN, \
+    DEFAULT_FORCE_SUGGESTED_COUNTRY_COLUMN
 
 # Ignore the specific nested tensors warning from PyTorch
 warnings.filterwarnings(
     "ignore",
     message="The PyTorch API of nested tensors is in prototype stage and will change in the near future."
 )
-
 
 from data_structuring.components.readers.file_reader import TextFileReader, CsvFileReader
 # Runners
@@ -48,7 +51,9 @@ def _cli():
     elif cli_args.input_data_path.suffix in (".csv", ".tsv"):
         reader = CsvFileReader(cli_args.input_data_path,
                                sep=("\t" if cli_args.input_data_path.suffix == ".tsv" else ","),
-                               data_column_name="address")
+                               data_column_name=DEFAULT_ADDRESS_COLUMN,
+                               suggested_country_column=DEFAULT_SUGGESTED_COUNTRY_COLUMN,
+                               force_suggested_country_column=DEFAULT_FORCE_SUGGESTED_COUNTRY_COLUMN)
     else:
         logger.error("Unsupported file format %s. Please provide a .txt, .csv or .tsv", cli_args.input_data_path)
         sys.exit(1)

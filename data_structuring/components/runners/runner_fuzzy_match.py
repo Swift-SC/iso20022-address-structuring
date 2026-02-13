@@ -22,8 +22,15 @@ class RunnerFuzzyMatch(BaseRunner):
     def __init__(self, config: FuzzyMatchConfig, database: Database):
         super().__init__(config=config, database=database)
 
-    def match(self, data: list[str]) -> Generator[ResultRunnerFuzzyMatch, None, None]:
+    def match(self,
+              data: list[str],
+              suggested_countries: list[str | None] | None = None
+              ) -> Generator[ResultRunnerFuzzyMatch, None, None]:
         logger.info("Start batched fuzzy matching runner")
+
+        if suggested_countries is None:
+            suggested_countries = [None] * len(data)
+
         # Start batched fuzzy matching on countries, country codes, and towns
         logger.info("Countries batch")
         all_fs_countries = fuzzy_scan.fuzzyscan_all_batched(data,
@@ -46,16 +53,19 @@ class RunnerFuzzyMatch(BaseRunner):
                                                         max_l_dist=self.config.fuzzy_match_tolerance_towns,
                                                         n_workers=self.config.num_workers)
 
-        # Same principle for extended towns
+        # Same principle for extended towns — include suggested_country in the ISO set
         all_word_mapping_towns_extended = [
             {
                 key: value for iso in
                 set([match.origin for match in fuzzy_scan.FuzzyMatchResult.merge(fs_countries, fs_country_code)
-                     if match.origin is not None] + self.database.countries_overrides)
+                     if match.origin is not None]
+                    + self.database.countries_overrides
+                    + ([suggested] if suggested else []))
                 if iso in self.database.extended_all_possibilities_town
                 for key, value in self.database.extended_all_possibilities_town[iso].items()
             }
-            for fs_countries, fs_country_code in zip(all_fs_countries, all_fs_country_codes)
+            for fs_countries, fs_country_code, suggested in zip(
+                all_fs_countries, all_fs_country_codes, suggested_countries)
         ]
 
         all_extended_fs_towns = [
