@@ -168,19 +168,17 @@ class RunnerPostProcessing(BaseRunner):
             )
 
             if suggested_country:
-                best_crf_score = self.config.base_score_suggested_country
                 for match in fuzzy_match_result.country_code_matches:
                     if suggested_country == match.possibility and suggested_country == match.origin:
                         match.flags.append(CountryFlag.IS_SUGGESTED_COUNTRY)
                         match.crf_score = max(match.crf_score, self.config.base_score_suggested_country)
-                        best_crf_score = max(match.crf_score, best_crf_score)
 
                 if suggested_country != "NO COUNTRY":
                     suggested_country_match = FuzzyMatch(start=len(address_sample.text) + 2,
                                                          end=len(address_sample.text) + 2,
                                                          matched="", dist=0, origin=suggested_country,
                                                          possibility=suggested_country,
-                                                         crf_score=best_crf_score,
+                                                         crf_score=self.config.base_score_suggested_country,
                                                          flags=[CountryFlag.GENERATED_BY_SUGGESTED_COUNTRY])
                     fuzzy_match_result.country_code_matches = FuzzyMatchResult.merge(
                         fuzzy_match_result.country_code_matches, FuzzyMatchResult([suggested_country_match]))
